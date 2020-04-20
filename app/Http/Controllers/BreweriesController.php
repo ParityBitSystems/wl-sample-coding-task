@@ -15,9 +15,11 @@ class BreweriesController extends Controller
         $this->breweryApiClient = $apiClient;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $breweries = $this->breweryApiClient->getPaginated(1);
+        $breweries = $this->breweryApiClient->getPaginated($request->query('page', 1));
+
+        return $breweries;
     }
 
 
