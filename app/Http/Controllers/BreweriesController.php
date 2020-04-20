@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Breweries\ApiClient;
 use App\Breweries\Brewery;
+use App\Breweries\Resources\BreweryResource;
 use Illuminate\Http\Request;
 
 class BreweriesController extends Controller
@@ -19,12 +20,12 @@ class BreweriesController extends Controller
     {
         $breweries = $this->breweryApiClient->getPaginated($request->query('page', 1));
 
-        return $breweries;
+        return BreweryResource::collection($breweries);
     }
 
 
     public function show(Brewery $brewery)
     {
-        return $brewery;
+        return new BreweryResource($brewery);
     }
 }
