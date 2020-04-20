@@ -3,17 +3,33 @@
 namespace App\Breweries;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\HandlerStack;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
+use Kevinrob\GuzzleCache\CacheMiddleware;
+use Kevinrob\GuzzleCache\Storage\LaravelCacheStorage;
+use Kevinrob\GuzzleCache\Strategy\PrivateCacheStrategy;
 
 class ApiClient
 {
     protected $httpClient;
     protected $baseUrl = 'https://api.openbrewerydb.org';
 
-    public function __construct(Client $httpClient)
+    public function __construct()
     {
-        $this->httpClient = $httpClient;
+        $stack = HandlerStack::create();
+        $stack->push(
+            new CacheMiddleware(
+                new PrivateCacheStrategy(
+                    new LaravelCacheStorage(
+                        Cache::store()
+                    )
+                )
+            ),
+            'cache'
+        );
+        $this->httpClient = new Client(['handler' => $stack]);
     }
 
     public function getPaginated(int $page = 1)
