@@ -37,7 +37,7 @@ class ApiClient
             $this->baseUrl . '/breweries/' . $breweryId
         )->getBody()->getContents();
 
-        $breweryData = new Collection(json_decode($breweryData, true));
+        $breweryData = json_decode($breweryData, true);
 
         return $this->populateBrewery($breweryData);
     }
