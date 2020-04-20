@@ -24,7 +24,12 @@ class BreweryResource extends JsonResource
                 'state' => $this->state,
                 'postcode' => $this->postal_code,
                 'country' => $this->country,
-            ]
+            ],
+            'links' => [
+                'self' => [
+                    'href' => url(route('breweries.show', [$this->id])),
+                ]
+            ],
         ];
     }
 }
